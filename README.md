@@ -1,7 +1,6 @@
 # Firebase authentication template using vuejs
 
-[https://zb-core.web.dev](https://zb-core.web.dev)
-starter kit for vuejs apps using firebase authentication and pinia as state management.
+[https://zb-core.web.app](https://zb-core.web.app) starter kit for vuejs apps using firebase authentication and pinia as state management.
 
 ## Project Setup
 
