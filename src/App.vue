@@ -18,8 +18,10 @@
 <script setup>
   import { onBeforeMount, computed } from 'vue'
   import { useSessionStore } from '@/stores/session'
+  import { useRouter } from 'vue-router'
 
   const session = useSessionStore()
+  const router = useRouter()
 
   const authenticated = computed(()=>session.isAuthenticated)
 
@@ -29,6 +31,9 @@
 
   const logOut = () => {
     session.signOut()
+      .then(()=>{
+        router.push({name:"login"})
+      })
   }
 
 </script>

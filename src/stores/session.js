@@ -30,8 +30,8 @@ export const useSessionStore = defineStore({
       this.user = payload
     },
 
-    async _init() {
-      this.SET_AUTH( await getAuth() );
+    _init() {
+      this.SET_AUTH( getAuth() );
       onAuthStateChanged(this.getAuth,  user => {
         this.SET_USER(user)
       })
@@ -46,17 +46,12 @@ export const useSessionStore = defineStore({
       const provider = new GoogleAuthProvider();
       return signInWithPopup( this.getAuth, provider)
         .then( result => {
-          const credential = GoogleAuthProvider.credentialFromResult(result)
-          const token = credential.accessToken
-          console.log({ token })
-          console.log({ result })
           this.SET_USER(result.user);
         })
     },
     loginAnonymously(){
       return signInAnonymously( this.getAuth )
         .then( result => {
-          console.log(result)
           this.SET_USER(result.user)
         } )
     },

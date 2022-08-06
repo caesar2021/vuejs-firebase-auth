@@ -1,4 +1,4 @@
-import { initializeApp, getApps, getApp,  } from "firebase/app";
+import { initializeApp, getApps, getApp  } from "firebase/app";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check"
 
 const firebaseConfig = {

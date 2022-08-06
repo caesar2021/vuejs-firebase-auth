@@ -15,15 +15,11 @@
 
 	const loggedIn = () => {
 		const { redirect } = route.query
-
-		console.log("called!!")
-
 		if(redirect){
 			router.push(redirect)
 		} else {
 			router.push({ name: 'home' })
 		}
-
 	}
 
 </script>
