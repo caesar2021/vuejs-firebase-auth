@@ -4,10 +4,8 @@ import {
   getAuth, 
   onAuthStateChanged, 
   createUserWithEmailAndPassword, 
-  GoogleAuthProvider,
   signInWithEmailAndPassword, 
-  signInAnonymously, 
-  signInWithPopup,
+  signInAnonymously,
   signOut
 } from 'firebase/auth'
 
@@ -41,13 +39,6 @@ export const useSessionStore = defineStore({
         .then( result => {
           this.SET_USER(result.user)
         } )
-    },
-    loginWithGoogle(){
-      const provider = new GoogleAuthProvider();
-      return signInWithPopup( this.getAuth, provider)
-        .then( result => {
-          this.SET_USER(result.user);
-        })
     },
     loginAnonymously(){
       return signInAnonymously( this.getAuth )

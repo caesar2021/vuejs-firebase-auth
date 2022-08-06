@@ -14,13 +14,12 @@
 			<br/>
 			<button type="button" @click="anon">Sign in Anonymously</button>
 			<br/>
-			<button type="button" @click="google">Sign in with Google</button>
 		</div>
 	</form>
 </template>
 
 <script setup>
-	import { reactive } from 'vue'
+	import { reactive, onMounted } from 'vue'
 	import { useSessionStore } from '@/stores/session'
 
 	const emit = defineEmits(['authenticated'])
@@ -49,17 +48,6 @@
 	const anon = () => {
 		state.error = null;
 		session.loginAnonymously()
-			.then(()=>{
-				emit("authenticated")
-			})
-			.catch(err => {
-				state.error = err
-			})
-	}
-
-	const google = () => {
-		state.error = null;
-		session.loginWithGoogle()
 			.then(()=>{
 				emit("authenticated")
 			})
