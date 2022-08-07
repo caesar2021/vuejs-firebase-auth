@@ -4,20 +4,24 @@ import {
   getAuth, 
   onAuthStateChanged, 
   createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
+  signInWithEmailAndPassword,
+  signInWithPhoneNumber,
   signInAnonymously,
-  signOut
+  signOut,
+  RecaptchaVerifier
 } from 'firebase/auth'
 
 export const useSessionStore = defineStore({
   id: 'session',
   state: () => ({
     auth: null,
-    user: null
+    user: null,
+    verifier: null,
   }),
   getters: {
     isAuthenticated: (state) => state.user ? true : false,
     getAuth: (state) => state.auth,
+    getVerifier: (state) => state.verifier,
   },
   actions: {
 
@@ -27,6 +31,9 @@ export const useSessionStore = defineStore({
     SET_USER(payload) {
       this.user = payload
     },
+    SET_VERIFIER(payload){
+      this.verifier = payload
+    },
 
     _init() {
       this.SET_AUTH( getAuth() );
@@ -35,10 +42,25 @@ export const useSessionStore = defineStore({
       })
     },
     login(payload){
-      return signInWithEmailAndPassword(this.getAuth, payload.email, payload.password)
+      return signInWithEmailAndPassword( this.getAuth, payload.email, payload.password )
         .then( result => {
           this.SET_USER(result.user)
         } )
+    },
+    phoneLoginReCaptcha(el){
+      this.verifier = new RecaptchaVerifier(el, {
+        size: 'invisible'
+      }, this.getAuth)
+      return this.getVerifier
+    },
+    phoneLogin( payload, verifier ){
+      return signInWithPhoneNumber( this.getAuth, payload, verifier)
+    },
+    confirmCode( payload, confirmationResult ){
+      return confirmationResult.confirm(payload)
+        .then( result => {
+          this.SET_USER(result.user)
+        })
     },
     loginAnonymously(){
       return signInAnonymously( this.getAuth )

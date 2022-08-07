@@ -14,13 +14,25 @@
 			<br/>
 			<button type="button" @click="anon">Sign in Anonymously</button>
 			<br/>
+			<br/>
+			<div v-if="!state.confirm">
+				<input type="text" v-model="state.phone" placeholder="Enter phone number"/>
+				<div ref="recaptchaContainer"></div>
+				<button type="button" @click="phone">Sign in with Phone</button>
+			</div>
+			<div v-else>
+				<input type="text" v-model="state.code" placeholder="Enter Code"/>
+				<button type="button" @click="confirmPhone">Confirm</button>
+			</div>
 		</div>
 	</form>
 </template>
 
 <script setup>
-	import { reactive, onMounted } from 'vue'
+	import { reactive, onMounted, ref } from 'vue'
 	import { useSessionStore } from '@/stores/session'
+
+	const recaptchaContainer = ref(null)
 
 	const emit = defineEmits(['authenticated'])
 
@@ -31,7 +43,10 @@
 			email: "",
 			password: "",
 		},
-		error: null
+		phone: "",
+		verifier: null,
+		error: null,
+		confirm: null
 	})
 
 	const formSubmit = () => {
@@ -40,9 +55,7 @@
 			.then(()=>{
 				emit("authenticated")
 			})
-			.catch(err => {
-				state.error = err
-			})
+			.catch(err => state.error = err)
 	}
 
 	const anon = () => {
@@ -51,9 +64,35 @@
 			.then(()=>{
 				emit("authenticated")
 			})
-			.catch(err => {
-				state.error = err
+			.catch(err => state.error = err)
+	}
+
+	const phone = () => {
+		state.error = null;
+		state.verifier = session.phoneLoginReCaptcha(
+			recaptchaContainer.value
+		)
+		session.phoneLogin(
+			state.phone,
+			state.verifier
+		).then(confirmationResult=>{
+			state.confirm = confirmationResult
+			//console.log({ confirmationResult })
+			//confirmationResult.confirm("444444")
+			//	.then(response => {
+			//		emit("authenticated")
+			//	})
+			//	.catch( err => state.error = err)
+		}).catch(err => state.error = err)
+	}
+
+	const confirmPhone = () => {
+		state.error = null;
+		state.confirm.confirm(state.code)
+			.then( response => {
+				emit("authenticated")
 			})
+			.catch(err => state.error = err)
 	}
 
 </script>
