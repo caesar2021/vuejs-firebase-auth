@@ -77,12 +77,6 @@
 			state.verifier
 		).then(confirmationResult=>{
 			state.confirm = confirmationResult
-			//console.log({ confirmationResult })
-			//confirmationResult.confirm("444444")
-			//	.then(response => {
-			//		emit("authenticated")
-			//	})
-			//	.catch( err => state.error = err)
 		}).catch(err => state.error = err)
 	}
 
